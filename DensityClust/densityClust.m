@@ -1,4 +1,4 @@
-function [numClust, clustInd, centInd, haloInd] = densityClust(dist, dc, rho, isHalo)
+function [numClust, clustInd, centInd, haloInd] = densityClust(dist, dc, rho, isHalo, minPoints)
 %%DENSITYCLUST Clustering by fast search and find of density peaks.
 %   SEE the following paper published in *SCIENCE* for more details:
 %       Alex Rodriguez & Alessandro Laio: Clustering by fast search and find of density peaks,
@@ -8,6 +8,7 @@ function [numClust, clustInd, centInd, haloInd] = densityClust(dist, dc, rho, is
 %       dc: cut-off distance
 %       rho: local density [row vector]
 %       isHalo: 1 denotes that the haloInd assigment is provided, otherwise 0.
+%       minPoints: minimum number of points to consider a cluster
 %   OUTPUT:
 %       numClust: number of clusters
 %       clustInd: cluster index that each point belongs to, NOTE that -1 represents no clustering assignment (haloInd points)
@@ -32,7 +33,7 @@ function [numClust, clustInd, centInd, haloInd] = densityClust(dist, dc, rho, is
     delta(ordRho(1)) = max(delta);
     indNearNeigh(ordRho(1)) = 0; % no point with higher density
     
-    isManualSelect = 1; % 1 denote that all the cluster centroids are selected manually, otherwise 0
+    isManualSelect = 0; % 1 denote that all the cluster centroids are selected manually, otherwise 0
     [numClust, centInd] = decisionGraph(rho, delta, isManualSelect);
     
     % after the cluster centers have been found,
@@ -47,6 +48,13 @@ function [numClust, clustInd, centInd, haloInd] = densityClust(dist, dc, rho, is
     end
     
     haloInd = haloAssign(dist, clustInd, numClust, dc, rho, isHalo);
+    
+    % VS/DEW: ignore clusters with fewer than minPoints   
+    for i=1:numClust
+        if nnz(clustInd==i)<minPoints
+            clustInd(clustInd==i)=NaN;
+        end
+    end
     
 end
 

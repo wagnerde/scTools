@@ -33,7 +33,32 @@ function [numClust, centInd] = decisionGraph(rho, delta, isManualSelect)
         end
         
     else
-        % DO NOTHING, just for futher work ...
+        alpha=2;
+        P = polyfit(rho,delta,alpha);
+        if alpha==1
+            figure;
+            plot(rho, delta, 'o', 'MarkerSize', 5, 'MarkerFaceColor', 'k', 'MarkerEdgeColor', 'k');
+            hold on
+            yfit = P(1)*rho+P(2);
+            plot(rho,yfit,'g-.');
+        elseif alpha==2
+            figure
+            t2 = 0:1:300;
+            y2 = polyval(P,t2);
+            plot(rho,delta,'o',t2,y2)
+        end
+        title('Local-Density Clustering: Decision Graph', 'FontSize', 12);
+        xlabel('\rho (Local Density)');
+        ylabel('\delta (Minimum Distance)');
+        f = polyval(P,rho);
+        err=delta-f;
+        cutoff=quantile(delta-f,.99);
+        for i = 1 : NE
+            if err(i)>cutoff
+                numClust = numClust + 1;
+                centInd(i) = numClust;
+            end
+        end
     end
 
 end

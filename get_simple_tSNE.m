@@ -1,10 +1,12 @@
 function tSNE = get_simple_tSNE(X_use, gene_ind, varargin)
 % Usage: tSNE = get_simple_tSNE(X_use, gene_ind, varargin)
 %
-% This functions executes the tSNE routine from:
-% "t-distributed Stochastic Neighbor Embedding"
-% Paper: Laurens van der Maaten, Geoffrey Hinton; 9(Nov):2579--2605, 2008.
-%         http://www.cs.toronto.edu/~fritz/absps/tsnefinal.pdf
+% This function performs "t-distributed Stochastic Neighbor Embedding" 
+% Paper:
+%    Laurens van der Maaten, Geoffrey Hinton; 9(Nov):2579--2605, 2008.
+%    http://www.cs.toronto.edu/~fritz/absps/tsnefinal.pdf
+% Code available from:
+%    https://lvdmaaten.github.io/tsne/
 %
 %
 % INPUTS:

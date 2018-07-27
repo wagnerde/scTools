@@ -11,24 +11,30 @@ function plot_clusters_2d(xy, clust_ids, clust_names)
 
 %% CODE:
 
-% add color brewer functions to path
-addpath('scTools/cbrewer')
-
 % if cluster names are not specified, just use numbers instead
 if ~exist('clust_names', 'var')
     clust_names = cellstr(num2str(clust_ids));
 end
 
-% set colormap, unassigned cells set to black
+% use cbrewer to generate color heatmaps
+% https://www.mathworks.com/matlabcentral/fileexchange/34087-cbrewer-colorbrewer-schemes-for-matlab
+addpath('scTools/cbrewer') 
+
+% set colormap
 cols = cbrewer('qual','Set3', max(clust_ids));
-cols = [cols; [0 0 0]];
 color_ids = clust_ids;
-color_ids(color_ids == -1) = max(color_ids)+1;
+
+% if 'unassigned' (i.e. "-1") cluster is present, set to black
+if sum(ismember(clust_ids, -1))>0
+    cols = [cols; [0 0 0]];
+    color_ids(color_ids == -1) = max(color_ids)+1;
+end
 
 % make scatter plot
+figure
 scatter(xy(:,1), xy(:,2), 25, color_ids, 'fill','linewidth',0.0001,'MarkerFaceAlpha',0.3);
 
-% adjust axis limits
+% adjust axis limits to leave gap
 gap = 0.1;
 x_plot = xy(:,1); x_range = range(x_plot);
 y_plot = xy(:,2); y_range = range(y_plot);
