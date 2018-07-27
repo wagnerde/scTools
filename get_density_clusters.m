@@ -19,7 +19,7 @@ minPoints = 10;
 kernel = 'Gauss';
 
 % add functions to path
-addpath('scTools/DensityClust')
+addpath('scTools/densityClust')
 
 % perfom density clustering
 distance_matrix = squareform(pdist(xy, 'euclidean'));
