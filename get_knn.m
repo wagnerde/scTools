@@ -70,17 +70,12 @@ D_local = mat2array(D_local(:,2:end));
 % normalize edge distance to a global z-score
 D_global = zscore(D);
 
-% convert correlation distances to p-values
-if strcmp(distance_metric, 'correlation')
-    D_p = pvalPearson('b', 1-D, nDim);
-end
-
 % generate labels   
 nEdges = length(IDX_node2);
 NodeIDs = (1:nNodes)';
 
 % assemble edge & node tables
-EdgeTable = table([IDX_node1, IDX_node2], D_global, D_local, D, D_p, 'VariableNames', {'EndNodes', 'Weights', 'D_local', 'D_orig', 'D_pval'});
+EdgeTable = table([IDX_node1, IDX_node2], D_global, D_local, D, 'VariableNames', {'EndNodes', 'Weights', 'D_local', 'D_orig'});
 NodeTable = table(NodeIDs, 'VariableNames', {'Name'});
 NodeTable.Name = cellstr(num2str(NodeTable.Name));
 
