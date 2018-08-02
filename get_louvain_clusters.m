@@ -1,5 +1,5 @@
-function [ClustID, Quality] = get_louvain_clusters(G, gamma)
-% Usage: [ClustID, Quality] = get_louvain_clusters(G, gamma)
+function [ClustID, ClustID_filt, Quality] = get_louvain_clusters(G, gamma)
+% Usage: [ClustID, ClustID_filt, Quality] = get_louvain_clusters(G, gamma)
 %
 % Performs Louvain-based community detection using 'genlouvain'
 %
@@ -9,8 +9,9 @@ function [ClustID, Quality] = get_louvain_clusters(G, gamma)
 %           Values <1 give fewer clusters.
 % 
 % OUTPUTS:
-% clustID   Community/Cluster assignments for each cell
-% Q         Quality score for the partition of the network
+% ClustID         Community/Cluster assignments for each cell
+% ClustID_filt    Small clusters assigned to NaN
+% Quality         Quality score for the partition of the network
 %
 %% CODE:
 
@@ -27,5 +28,13 @@ B = @(v) A(:,v) - gamma*k'*k(v)/twom;
 [ClustID, Quality] = genlouvain(B);
 Quality = Quality/twom;
 
+% ignore clusters with < 10 cells
+ClustID_filt = ClustID;
+[clust_counts, ~] = count_unique(ClustID_filt);
+low_count_flag = find(clust_counts < 10);
+ClustID_filt(ismember(ClustID_filt, low_count_flag)) = NaN;
 
+% clean up cluster assignments
+ClustID_filt = grp2idx(ClustID_filt);
+ClustID = grp2idx(ClustID);
 
