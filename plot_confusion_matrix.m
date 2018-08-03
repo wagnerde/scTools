@@ -12,6 +12,9 @@ function plot_confusion_matrix(ids1, ids2)
 
 %% CODE: 
 
+% add path
+addpath('scTools/othercolor')
+
 % specify 1st classifications: x-axis
 c1_nClasses = sum(unique(ids1)>0);
 ids1(ids1==-1) = max(ids1)+1; % ignore any ids set to -1
