@@ -1,5 +1,5 @@
-function [table_CorrGenes, corr_gene_ind] = get_gene_neighbors(X, gene_names_all, gene_query, ndisp)
-% Usage: [table_CorrGenes, corr_gene_ind] = get_gene_neighbors(X, gene_names_all, gene_query, ndisp)
+function [table_CorrGenes, corr_gene_ind] = get_gene_neighbors(X, gene_names_all, gene_query, count_thresh, cell_thresh, ndisp)
+% Usage: [table_CorrGenes, corr_gene_ind] = get_gene_neighbors(X, gene_names_all, gene_query, count_thresh, cell_thresh, ndisp)
 %
 % Given a single query gene, returns table of most highly correlated genes 
 % based on Pearson distance, with associated P-values.
@@ -16,6 +16,10 @@ function [table_CorrGenes, corr_gene_ind] = get_gene_neighbors(X, gene_names_all
 % gene_query
 %       User specified query gene (string).
 % 
+% counts_thresh & cell_thresh
+%       Limit analysis to genes with at least counts_thresh number of 
+%       counts in at least cell_thresh number of cells
+%
 % ndisp
 %       Number of nearest gene neighbors to return.       
 % 
@@ -34,14 +38,18 @@ function [table_CorrGenes, corr_gene_ind] = get_gene_neighbors(X, gene_names_all
 % add path for p-value adjustment function fdr_bh
 addpath('scTools/fdr_bh')
 
+% extract the counts values for the query gene across all cells
+query_gene_ind = strcmp(gene_names_all, gene_query);
+query_gene_vals = X(query_gene_ind,:)';
+
+% exclude genes without at least 'count_thresh' counts in 'cell_thresh cells'
+% but still retain the query gene
+gene_filt = sum(X>count_thresh,2)>cell_thresh | query_gene_ind';
+X = X(gene_filt,:);
+gene_names_all = gene_names_all(gene_filt);
+
 % transpose of the original data such that rows=cells and columns=genes
 Xtranspose = X';
-
-% get index of input gene name in the original gene name list
-query_gene_ind = strcmp(gene_names_all, gene_query);
-
-% extract the counts values for this gene across all cells(row)
-query_gene_vals = Xtranspose(:,query_gene_ind);
 
 % compute the correlation between selected gene & all other genes
 [RHO,PVAL] = corr(Xtranspose,query_gene_vals,'rows','complete');
