@@ -38,14 +38,14 @@ addpath('scTools/fdr_bh')
 Xtranspose = X';
 
 % get index of input gene name in the original gene name list
-corr_gene_ind = matchString(gene_names_all,gene_query,'true');
+query_gene_ind = strcmp(gene_names_all, gene_query);
 
 % extract the counts values for this gene across all cells(row)
-gene_vals = Xtranspose(:,corr_gene_ind);
+query_gene_vals = Xtranspose(:,query_gene_ind);
 
 % compute the correlation between selected gene & all other genes
-[RHO,PVAL] = corr(Xtranspose,gene_vals,'rows','complete');
-[~,~,PVAL_adj] = fdr_bh(PVAL);
+[RHO,PVAL] = corr(Xtranspose,query_gene_vals,'rows','complete');
+[~,~,~,PVAL_adj] = fdr_bh(PVAL);
 
 % check how many genes to display
 if ~exist('ndisp', 'var')
