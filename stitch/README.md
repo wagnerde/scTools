@@ -88,12 +88,12 @@ Run the script by typing the following into the Matlab command line:
 We recommend visualizing STITCH graphs interactively using the ForceAtlas2 layout in [Gephi](https://gephi.org/). The Matlab graph object can be imported into Gephi from DOT format, for example by using the 'graph_to_dot' function from [Matlab-Graphviz interface](https://www.mathworks.com/matlabcentral/fileexchange/4518-matlab-graphviz-interface) by Leon Peshkin.  
   ```
   addpath('scTools/graphViz2Mat1')
-  graph_to_dot(adjacency(G), 'directed', 0, 'filename', 'gephi_graph.dot')
+  graph_to_dot(adjacency(G), 'directed', 0, 'filename', 'Wagner2018_stitch.dot')
   ```
 
 Gephi coordinates can be exported as a .NET file and imported back to Matlab.  The example dataset provides pre-computed XY coordinates.  
   ```
-  XY = import_gephi_xy('gephi_export.net')
+  XY = import_gephi_xy('Wagner2018_stitch.net')
   ```
 
 Plot the STITCH graph using Gephi coordinates. Default behavior colors nodes by timepoint.    
@@ -167,6 +167,24 @@ OPTIONAL INPUTS:
 
 ```
 
+### Coarse-Graining the STITCH Graph ###
+
+The STITCH graph may be simplified via a process called 'coarse-graining'.  In the coarse-grained graph, nodes correspond to  clusters of cells (specified by node_IDs), and edges reflect the connectivity of two clusters (the proportion of original shared single-cell edges to total outgoing edges).  Through the coarse-grained graph, a spanning tree "scaffold" is then traced, which highlights the strongest set of edges that bridge clusters between timepoints.
+
+```
+  node_IDs = [];
+  for j = nTimePoints:-1:1
+      node_IDs = [node_IDs; string(DataSet(j).celldata.cell_IDs_names)]; 
+  end
+  [G_cg, G_cg_scaff] = stitch_coarse_grain(G, index_to_graph(G, node_IDs));
+  graph_to_dot(adjacency(G_cg_scaff), 'directed', 0, 'filename', 'gephi/Wagner2018_cg.dot')
+```
+Plot the Coarse-grained graph, again using imported Gephi coordinates.
+```
+  XY_cg = import_gephi_xy('gephi/Wagner2018_cg.net');
+  figure; stitch_plot_graph_cg(G_cg, XY_cg, [], [], 'node_size', 5)
+```
+
 ### Exporting STITCH Graphs ###
 
 Export attributes of the STITCH graph as text files (e.g. for import into non-Matlab environments).   
@@ -183,7 +201,3 @@ timepoints.txt   Timepoint/sample flags for each cell (DataSet.name)
 edges.csv        Edge table for G
 coordinates.txt  XY coordinates for each node of G
 ```
-
-
-
-
