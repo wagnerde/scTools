@@ -18,6 +18,11 @@ fclose(fileID);
 
 % find the row where node data ends
 ind_NodeDataEnd = find(strcmp('*Edges',dataArray{1}))-1;
+if isempty(ind_NodeDataEnd)
+    try
+        ind_NodeDataEnd = find(strcmp('*Arcs',dataArray{1}))-1;
+    end
+end
 
 % read in names, x-coordinates, and y-coordinates for each node
 gephi_Id = cellfun(@str2num, dataArray{2}(1:ind_NodeDataEnd));
