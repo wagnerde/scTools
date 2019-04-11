@@ -122,7 +122,7 @@ end
 labelnode(p, G.Nodes.Name, cellstr(G.Nodes.NodeLabels))
 
 % format node sizes
-p.MarkerSize = 2+30*(G.Nodes.fCells);
+p.MarkerSize = 4+30*(G.Nodes.fCells);
 
 % format node colors
 switch settings.nodes
