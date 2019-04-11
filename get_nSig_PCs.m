@@ -17,7 +17,7 @@ function nSig_PCs = get_nSig_PCs(X, gene_ind, nRandTrials)
 %                   eigenvalues
 
 %% SETTINGS:
-show_plot = false;
+show_plot = true;
 
 %% PERFORM PCA ON STANDARDIZED EXPRESSION VALUES:
 z = full(zscore(X(gene_ind,:)')');
@@ -27,6 +27,7 @@ z = full(zscore(X(gene_ind,:)')');
 
 % PCA of randomized matrices
 for q = 1:nRandTrials
+    rng(q) % set the random number seed to q (for reproducibility)
     zRnd{q} = z;
     for k = 1:size(z,1)
         zRnd{q}(k,:) = z(k,randperm(size(z,2)));

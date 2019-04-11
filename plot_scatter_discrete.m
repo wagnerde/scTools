@@ -23,7 +23,7 @@ end
 
 % use cbrewer to generate color heatmaps
 % https://www.mathworks.com/matlabcentral/fileexchange/34087-cbrewer-colorbrewer-schemes-for-matlab
-addpath('scTools/cbrewer') 
+addpath('scTools/cbrewer/') 
 
 % set colormap
 cols = cbrewer('qual','Set3', max(group_ind));
@@ -35,7 +35,7 @@ if sum(ismember(group_ind, -1))>0
 end
 
 % make scatter plot
-figure('Position', [500 500 500 500])
+%figure('Position', [500 500 500 500])
 scatter(xy(:,1), xy(:,2), 25, group_ind, 'fill','linewidth',0.0001,'MarkerFaceAlpha',0.8);
 
 % adjust axis limits to leave gap
@@ -53,7 +53,7 @@ colormap(cols)
 
 % add group labels
 for k = 1:max(group_ind)
-    text(mean(xy(group_ind==k,1)), mean(xy(group_ind==k,2)), group_names(find(group_ind==k,1)), 'fontweight', 'normal', 'fontsize', 12);
+    text(mean(xy(group_ind==k,1)), mean(xy(group_ind==k,2)), group_names(find(group_ind==k,1)), 'fontweight', 'normal', 'fontsize', 12, 'Interpreter', 'none');
 end
 
 

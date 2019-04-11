@@ -25,7 +25,7 @@ A = get_jaccard_edge_weights(G);
 k = full(sum(A));
 twom = sum(k);
 B = @(v) A(:,v) - gamma*k'*k(v)/twom;
-[ClustID, Quality] = genlouvain(B);
+[ClustID, Quality] = genlouvain(B,[],0);
 Quality = Quality/twom;
 
 % ignore clusters with < 10 cells
