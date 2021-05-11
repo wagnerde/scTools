@@ -200,7 +200,7 @@ annotation('textbox',[0.15 0.80 0.3 0.01],'String',['CV_i_n_p_u_t = ', num2str(C
 
 % formatting
 set(gca,'fontsize',12)
-xlabel('Mean Reads per Cell')
+xlabel('Mean Transcripts per Cell')
 ylabel('Gene Fano Factor')
 set(gca,'xlim',[min(mu_gene)*0.2 max(mu_gene)*5],'xtick',10.^(-5:5))
 set(gca,'ylim',[min(FF_gene)*0.2 max(FF_gene)*5],'ytick',10.^(-5:5))
